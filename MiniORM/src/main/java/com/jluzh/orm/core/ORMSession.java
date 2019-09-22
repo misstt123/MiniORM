@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -133,6 +134,13 @@ public class ORMSession {
             return null;
         }
 
+    }
+
+    public  void close() throws SQLException {
+        if(connection!=null){
+            connection.close();
+            connection=null;
+        }
     }
 
 
