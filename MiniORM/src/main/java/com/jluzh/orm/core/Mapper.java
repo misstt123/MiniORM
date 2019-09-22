@@ -12,7 +12,7 @@ public class Mapper {
     private String className;//类名
     private String tableName;//表名
     private Map<String, String> idMapper = new HashMap<>();//id属性
-    private Map<String, String> propMapper = new HashMap<>();//非id属性
+    public Map<String, String> propMapper = new HashMap<>();//非id属性
 
     public String getClassName() {
         return className;

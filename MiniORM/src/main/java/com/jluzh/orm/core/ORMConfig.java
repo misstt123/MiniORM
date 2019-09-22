@@ -2,7 +2,6 @@ package com.jluzh.orm.core;
 
 import com.jluzh.orm.utils.AnnotationUtil;
 import com.jluzh.orm.utils.Dom4jUtil;
-import com.sun.java.browser.plugin2.DOM;
 import org.dom4j.Document;
 
 import java.io.File;
@@ -23,7 +22,7 @@ public class ORMConfig {
     private static Map<String, String> propConfig = new HashMap<>();//核心配置文件属性名
     private static Set<String> mappingSet;//映射类
     private static Set<String> entitySet;//实体类
-    private static List<Mapper> mapperList;//映射信息
+    public static List<Mapper> mapperList;//映射信息
 
     static {
         //得到classpath的luj
@@ -70,7 +69,7 @@ public class ORMConfig {
             String tabel = Dom4jUtil.getPropValue(document, "class", "tabel");
             Map<String, String> id_id = Dom4jUtil.ElementsID2Map(document);
             Map<String, String> mapping = Dom4jUtil.Elements2Map(document);
-            Mapper mapper=new Mapper();
+            Mapper mapper = new Mapper();
             mapper.setTableName(tabel);
             mapper.setClassName(name);
             mapper.setIdMapper(id_id);
@@ -83,12 +82,12 @@ public class ORMConfig {
         for (String packagePath : entitySet) {
             Set<String> nameSet = AnnotationUtil.getClassNameByPackage(packagePath);
             for (String name : nameSet) {
-                Class  clz = Class.forName(name);
+                Class clz = Class.forName(name);
                 String className = AnnotationUtil.getClassName(clz);
                 String tableName = AnnotationUtil.getTableName(clz);
                 Map<String, String> id_id = AnnotationUtil.getIdMapper(clz);
                 Map<String, String> mapping = AnnotationUtil.getPropMapping(clz);
-                Mapper mapper=new Mapper();
+                Mapper mapper = new Mapper();
                 mapper.setTableName(tableName);
                 mapper.setClassName(className);
                 mapper.setIdMapper(id_id);
@@ -97,6 +96,15 @@ public class ORMConfig {
             }
         }
 
+    }
+
+    public ORMSession buildORMSession() throws Exception {
+        //1连接数据库
+        Connection connection = this.getConnection();
+        //2.得到映射信息
+        this.getMapping();
+        //3.生成ORMSession对象
+        return new ORMSession(connection);
 
     }
 
